@@ -15,7 +15,7 @@ export function ServicesIndexContent() {
           <Reveal variant="fade">
             <p className="eyebrow mb-4">Полный цикл</p>
           </Reveal>
-          <RevealHeading className="display text-[clamp(2.8rem,7vw,5rem)]" mode="lines">
+          <RevealHeading as="h1" className="display text-[clamp(2.8rem,7vw,5rem)]" mode="lines">
             Услуги
           </RevealHeading>
           <RevealText className="mt-6 max-w-2xl text-[1.08rem] text-[var(--muted)]" delay={0.12}>

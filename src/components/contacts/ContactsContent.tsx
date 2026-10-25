@@ -17,7 +17,7 @@ export function ContactsContent() {
     <>
       <section className="border-b border-[var(--line)]">
         <div className="container py-12 lg:py-16">
-          <RevealHeading className="display text-[clamp(2.8rem,7vw,5rem)]" mode="lines">
+          <RevealHeading as="h1" className="display text-[clamp(2.8rem,7vw,5rem)]" mode="lines">
             Контакты
           </RevealHeading>
           <RevealText className="mt-6 max-w-2xl text-[1.08rem] text-[var(--muted)]" delay={0.12}>
