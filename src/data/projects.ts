@@ -532,6 +532,31 @@ export function getProjectsGroupedByYear(): ProjectYearGroup[] {
     }));
 }
 
+/**
+ * Local design-preview only: group real repository photos that already have a
+ * numeric year, WITHOUT reading or changing `approvedForPublication`.
+ * Must never be used for the public homepage chronology.
+ */
+export function getDesignPreviewProjectsGroupedByYear(): ProjectYearGroup[] {
+  const candidates = projects.filter(
+    (p) =>
+      typeof p.year === "number" &&
+      Number.isFinite(p.year) &&
+      p.equipmentModel.trim().length > 0 &&
+      p.images.length > 0,
+  );
+  const byYear = new Map<number, Project[]>();
+  for (const project of candidates) {
+    const year = project.year as number;
+    const list = byYear.get(year);
+    if (list) list.push(project);
+    else byYear.set(year, [project]);
+  }
+  return [...byYear.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([year, items]) => ({ year, projects: items }));
+}
+
 /** Flatten project images for marquees (About / Service pages). */
 export function toGallerySlides(list: Project[]): GallerySlide[] {
   const slides: GallerySlide[] = [];
