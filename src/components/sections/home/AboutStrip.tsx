@@ -15,19 +15,19 @@ export function AboutStrip() {
         </Reveal>
         <RevealHeading
           id="about-heading"
-          as="h1"
+          as="h2"
           className="display mb-8 text-[clamp(2.3rem,4.8vw,3.8rem)] lg:mb-12"
           mode="clip"
         >
           О нас
         </RevealHeading>
 
-        <Stagger className="grid gap-5 lg:grid-cols-12 lg:gap-6" fast>
+        <Stagger className="grid items-stretch gap-5 lg:grid-cols-12 lg:gap-6" fast>
           <StaggerItem
             as="article"
-            className="group border border-[var(--line)] bg-[var(--surface)] p-6 transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[var(--blue)] lg:col-span-3 lg:p-7"
+            className="group flex h-full flex-col border border-[var(--line)] bg-[var(--surface)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[var(--blue)] lg:col-span-3"
           >
-            <div className="mb-8 flex min-h-[9.5rem] items-center justify-center bg-[var(--pale-blue)] px-4 py-8 overflow-hidden">
+            <div className="flex aspect-[16/11] items-center justify-center bg-[var(--pale-blue)] px-4 overflow-hidden">
               <Image
                 src="/assets/brand/logo.png"
                 alt={company.legalName}
@@ -36,35 +36,36 @@ export function AboutStrip() {
                 className="h-24 w-24 object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               />
             </div>
-            <p className="text-[var(--muted)] leading-relaxed prose-max transition-transform duration-300 group-hover:translate-y-[-2px]">
-              ООО «Теплоэнергокомплект» работает с 2002 года и имеет многолетний опыт в ремонте,
-              строительстве и обслуживании котельных, паровых и водогрейных котлов, а также
-              котельно-вспомогательного оборудования. География реализованных проектов охватывает
-              всю страну — от Белгорода до Находки.
-            </p>
+            <div className="flex flex-1 flex-col p-6 lg:p-7">
+              <p className="text-[var(--muted)] leading-relaxed prose-max transition-transform duration-300 group-hover:translate-y-[-2px]">
+                ООО «Теплоэнергокомплект» работает с 2002 года и имеет многолетний опыт в ремонте,
+                строительстве и обслуживании котельных, паровых и водогрейных котлов, а также
+                котельно-вспомогательного оборудования. География реализованных проектов охватывает
+                всю страну — от Белгорода до Находки.
+              </p>
+            </div>
           </StaggerItem>
 
           <StaggerItem
             as="article"
-            className="group border border-[var(--line)] bg-[var(--surface)] overflow-hidden transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[var(--blue)] lg:col-span-5"
+            className="group flex h-full flex-col border border-[var(--line)] bg-[var(--surface)] overflow-hidden transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[var(--blue)] lg:col-span-5"
           >
             <RevealImage
-              className="relative aspect-[16/11] bg-[var(--pale-blue)]"
+              className="relative aspect-[16/11] shrink-0 bg-[var(--pale-blue)]"
               hoverZoom
             >
               <Image
                 src="/assets/boilers/boiler-cutout-repair.png"
                 alt="Промышленный котёл на раме с площадкой и обвязкой"
                 fill
-                priority
                 className="object-contain p-4 sm:p-6"
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
             </RevealImage>
-            <div className="p-6 lg:p-7 transition-transform duration-300 group-hover:translate-y-[-2px]">
-              <h2 className="font-[family-name:var(--font-display)] text-[1.55rem] uppercase tracking-wide text-balance">
+            <div className="flex flex-1 flex-col p-6 lg:p-7 transition-transform duration-300 group-hover:translate-y-[-2px]">
+              <h3 className="font-[family-name:var(--font-display)] text-[1.55rem] uppercase tracking-wide text-balance">
                 Профиль компании
-              </h2>
+              </h3>
               <p className="mt-3 text-[var(--muted)] leading-relaxed">
                 Полный цикл услуг: диагностика и дефектация, ремонт и модернизация, автоматизация,
                 пусконаладочные работы. Выбор и поставка оборудования. Разработка проектной и
@@ -75,9 +76,9 @@ export function AboutStrip() {
 
           <StaggerItem
             as="article"
-            className="group border border-[var(--line)] bg-[var(--surface)] overflow-hidden transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[var(--blue)] lg:col-span-4"
+            className="group flex h-full flex-col border border-[var(--line)] bg-[var(--surface)] overflow-hidden transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[var(--blue)] lg:col-span-4"
           >
-            <RevealImage className="relative aspect-[4/3]" hoverZoom delay={0.08}>
+            <RevealImage className="relative aspect-[16/11] shrink-0" hoverZoom delay={0.08}>
               <Image
                 src="/assets/projects/hq-heatex-copper-tubes.jpg"
                 alt="Поверхности нагрева котла на объекте"
@@ -86,10 +87,10 @@ export function AboutStrip() {
                 sizes="(max-width: 1024px) 100vw, 33vw"
               />
             </RevealImage>
-            <div className="p-6 lg:p-7 transition-transform duration-300 group-hover:translate-y-[-2px]">
-              <h2 className="font-[family-name:var(--font-display)] text-[1.55rem] uppercase tracking-wide text-balance">
+            <div className="flex flex-1 flex-col p-6 lg:p-7 transition-transform duration-300 group-hover:translate-y-[-2px]">
+              <h3 className="font-[family-name:var(--font-display)] text-[1.55rem] uppercase tracking-wide text-balance">
                 Специализация
-              </h2>
+              </h3>
               <p className="mt-3 text-[var(--muted)] leading-relaxed">
                 Паровые и водогрейные котлы отечественного производства: ДКВР, ДЕ, КЕ, КВ-ГМ
                 (ПТВМ), КВ-Р (КВТС) и других типов.

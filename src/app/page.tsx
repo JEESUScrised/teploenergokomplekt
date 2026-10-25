@@ -1,5 +1,6 @@
 import { AboutStrip } from "@/components/sections/home/AboutStrip";
 import { Advantages } from "@/components/sections/home/Advantages";
+import { HomeHero } from "@/components/sections/home/HomeHero";
 import { LicensesBand } from "@/components/sections/home/LicensesBand";
 import { ProjectsSection } from "@/components/sections/home/ProjectsSection";
 import { ServiceTicker } from "@/components/sections/home/ServiceTicker";
@@ -17,6 +18,7 @@ export const metadata = buildMetadata({
 export default function HomePage() {
   return (
     <>
+      <HomeHero />
       <AboutStrip />
       <ServiceTicker />
       <ServicesEditorial />

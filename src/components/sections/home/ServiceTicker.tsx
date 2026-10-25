@@ -4,12 +4,11 @@ import { useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const items = [
-  "Ремонт котлов",
-  "Реконструкция",
-  "Пусконаладка",
-  "Обмуровка",
   "Диагностика",
-  "Обслуживание",
+  "Ремонт котлов",
+  "Обмуровка",
+  "Пусконаладка",
+  "Реконструкция",
   "Комплектующие",
 ];
 
