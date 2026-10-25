@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { easeOutExpo } from "@/lib/motion";
@@ -19,12 +19,14 @@ const fieldClass =
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const inFlight = useRef(false);
   const reduce = usePrefersReducedMotion();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("submitting");
-    setMessage("");
+    if (inFlight.current || status === "submitting") {
+      return;
+    }
 
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -32,6 +34,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     const honeypot = String(data.get("company_website") ?? "");
     if (honeypot.trim()) {
       setStatus("idle");
+      setMessage("");
       return;
     }
 
@@ -61,19 +64,34 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       return;
     }
 
+    inFlight.current = true;
+    setStatus("submitting");
+    setMessage("");
+
     try {
       const response = await fetch("/api/leads/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, task }),
+        body: JSON.stringify({ name, phone, task, company_website: honeypot }),
       });
-      const payload = (await response.json()) as { ok?: boolean; code?: string; error?: string };
+      let payload: { ok?: boolean; code?: string; error?: string } = {};
+      try {
+        payload = (await response.json()) as { ok?: boolean; code?: string; error?: string };
+      } catch {
+        payload = {};
+      }
 
       if (response.status === 503 || payload.code === "UNCONFIGURED") {
         setStatus("unconfigured");
         setMessage(
           "Форма готова, но сервер приёма заявок ещё не подключён. Свяжитесь с нами по телефону или e-mail из раздела «Контакты».",
         );
+        return;
+      }
+
+      if (response.status === 429) {
+        setStatus("error");
+        setMessage(payload.error || "Слишком много запросов. Попробуйте позже.");
         return;
       }
 
@@ -89,6 +107,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     } catch {
       setStatus("error");
       setMessage("Ошибка сети. Проверьте соединение и попробуйте снова.");
+    } finally {
+      inFlight.current = false;
     }
   }
 
