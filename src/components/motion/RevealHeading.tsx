@@ -9,6 +9,7 @@ type Props = {
   className?: string;
   mode?: "lines" | "clip" | "up";
   delay?: number;
+  id?: string;
 };
 
 export function RevealHeading({
@@ -17,13 +18,14 @@ export function RevealHeading({
   className = "",
   mode = "clip",
   delay = 0,
+  id,
 }: Props) {
   const [ref, show] = useRevealGate<HTMLHeadingElement>();
   const lines = children.split("\n");
 
   if (mode === "lines") {
     return (
-      <Tag ref={ref} className={className}>
+      <Tag ref={ref} id={id} className={className}>
         {lines.map((line, i) => (
           <span key={`${line}-${i}`} className="block overflow-hidden py-[0.06em]">
             <span
@@ -41,6 +43,7 @@ export function RevealHeading({
   return (
     <Tag
       ref={ref}
+      id={id}
       className={`${className} reveal-${mode} ${show ? "is-in" : ""}`.trim()}
       style={{ ["--reveal-delay" as string]: `${delay}s` }}
     >
