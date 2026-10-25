@@ -34,7 +34,7 @@ export function Footer() {
             {[
               { href: "/about", label: "О компании" },
               { href: "/services", label: "Услуги" },
-              { href: "/documents", label: "Разрешительные документы" },
+              { href: "/documents", label: "Лицензии и допуски" },
               { href: "/contacts", label: "Контакты" },
             ].map((item) => (
               <li key={item.href}>

@@ -178,18 +178,18 @@ export function AboutContent() {
         <div className="container flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <RevealHeading className="display text-[clamp(2rem,4vw,3.2rem)]" mode="lines">
-              {"Разрешительные\nдокументы"}
+              {"Лицензии\nи допуски"}
             </RevealHeading>
             <RevealText className="mt-4 max-w-xl text-white/85" delay={0.1}>
               <p>
-                {company.legalName} располагает комплектом допусков и разрешительных документов для
+                Информация о лицензиях, допусках и аттестации специалистов {company.legalName} для
                 работ на ОПО.
               </p>
             </RevealText>
           </div>
           <Reveal delay={0.16}>
             <Button href="/documents" variant="light">
-              Смотреть документы
+              Лицензии и допуски
             </Button>
           </Reveal>
         </div>

@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button";
 const nav = [
   { label: "О компании", href: "/about" },
   { label: "Услуги", href: "/services", hasDropdown: true },
-  { label: "Документы", href: "/documents", fullLabel: "Разрешительные документы" },
+  { label: "Лицензии и допуски", href: "/documents", fullLabel: "Лицензии и допуски" },
   { label: "Контакты", href: "/contacts" },
 ];
 
@@ -280,7 +280,7 @@ export function Header() {
               {[
                 { href: "/about", label: "О компании" },
                 null,
-                { href: "/documents", label: "Разрешительные документы" },
+                { href: "/documents", label: "Лицензии и допуски" },
                 { href: "/contacts", label: "Контакты" },
               ].map((item, i) =>
                 item === null ? (

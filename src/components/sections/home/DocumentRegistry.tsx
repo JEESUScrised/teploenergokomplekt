@@ -45,8 +45,8 @@ export function DocumentRegistry() {
         <div className="mb-8 flex flex-col gap-6 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
           <SectionHead
             index="12"
-            title={"Разрешительные\nдокументы"}
-            lead="Полный комплект допусков для работ на ОПО. По запросу — заверенные копии для тендеров и экспертизы."
+            title={"Лицензии\nи допуски"}
+            lead="Информация о лицензиях и допусках. Документы для публикации подготавливаются; подробности — по запросу."
             className="mb-0"
             rule={false}
           />
