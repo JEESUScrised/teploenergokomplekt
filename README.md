@@ -24,8 +24,9 @@ npm run build
 ## Конфигурация клиента
 
 1. Контакты: `src/config/company.ts` — `phone`, `phoneDisplay`, `email`, `address`
-2. Публичный URL: `.env` → `NEXT_PUBLIC_SITE_URL`
-3. Приём заявок: `.env` → `LEADS_WEBHOOK_URL` (POST JSON)
+2. Публичный URL (build-time): `.env` → `NEXT_PUBLIC_SITE_URL`
+3. Приём заявок (runtime PHP, вне DocumentRoot): `~/teploenergokomplekt/leads.env` → `LEADS_WEBHOOK_URL`  
+   Пример: `deploy/teploenergokomplekt/leads.env.example`. Не использовать `NEXT_PUBLIC_*` для webhook.
 4. Сканы документов: положите файлы в `public/assets/documents/` и укажите пути в `src/data/documents.ts`
 
 См. `.env.example`.
