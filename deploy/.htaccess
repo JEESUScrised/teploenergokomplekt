@@ -8,6 +8,9 @@ RewriteEngine On
 # Keep PHP API working
 RewriteRule ^api/ - [L]
 
+# Retired service → diagnostics (permanent)
+RewriteRule ^services/obsluzhivanie-kotelnyh/?$ /services/diagnostika-i-obsledovanie/ [R=301,L]
+
 # Map clean URLs to exported .html when trailingSlash is false (safety)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

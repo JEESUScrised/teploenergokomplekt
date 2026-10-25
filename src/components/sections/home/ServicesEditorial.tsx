@@ -6,18 +6,30 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { RevealHeading, RevealText } from "@/components/motion/RevealHeading";
 import { services } from "@/data/services";
 
-const photoByIndex: Record<number, { src: string; alt: string }> = {
-  0: {
+const photoBySlug: Record<string, { src: string; alt: string }> = {
+  "diagnostika-i-obsledovanie": {
+    src: "/assets/projects/hq-techs-water-tubes.jpg",
+    alt: "Обследование котельного оборудования",
+  },
+  "remont-kotlov": {
     src: "/assets/projects/hq-welder-boiler.jpg",
     alt: "Сварочные работы на котле",
   },
-  2: {
-    src: "/assets/projects/hq-boiler-row-gas.jpg",
-    alt: "Ряд котлов с газовой обвязкой",
+  "obmurovka-i-teploizolyatsiya": {
+    src: "/assets/projects/hq-heatex-copper-tubes.jpg",
+    alt: "Обмуровка и поверхности нагрева",
   },
-  5: {
+  "puskonaladochnye-raboty": {
+    src: "/assets/projects/hq-boiler-row-gas.jpg",
+    alt: "Котельная после пусконаладки",
+  },
+  "rekonstruktsiya-i-modernizatsiya": {
     src: "/assets/projects/hq-boiler-red-plate.jpg",
-    alt: "Котельное оборудование на объекте",
+    alt: "Модернизированное котельное оборудование",
+  },
+  "postavka-komplektuyushchih": {
+    src: "/assets/projects/hq-pipes-yellow-network.jpg",
+    alt: "Трубопроводы и комплектующие",
   },
 };
 
@@ -36,15 +48,16 @@ export function ServicesEditorial() {
           </div>
           <RevealText className="max-w-md text-[var(--muted)] prose-max" delay={0.12}>
             <p>
-              Семь направлений полного цикла — от диагностики и ремонта до пусконаладки и поставки
-              комплектующих. Подробное описание — на отдельных страницах услуг.
+              Основные виды работ и услуг — от диагностики и обследования до пусконаладки и
+              поставки комплектующих с полным комплектом разрешительной и исполнительной
+              документации. Подробное описание — на отдельных страницах услуг.
             </p>
           </RevealText>
         </div>
 
         <Stagger className="border-t border-[var(--line)]" fast>
-          {services.map((service, index) => {
-            const photo = photoByIndex[index];
+          {services.map((service) => {
+            const photo = photoBySlug[service.slug];
             return (
               <StaggerItem key={service.slug}>
                 <Link
@@ -57,12 +70,15 @@ export function ServicesEditorial() {
                     </span>
                   </div>
                   <div className="md:col-span-4">
-                    <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.3rem,2vw,1.75rem)] uppercase tracking-wide text-balance">
+                    <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.15rem,1.8vw,1.65rem)] uppercase tracking-wide text-balance">
                       <span className="service-row-title relative">{service.title}</span>
                     </h3>
                   </div>
                   <div className="md:col-span-5">
-                    <p className="text-[var(--muted)]">{service.cardDescription}</p>
+                    <p className="text-[var(--muted)]">{service.cardTeaser}</p>
+                    <span className="mt-2 inline-block text-sm text-[var(--blue)] transition-transform duration-300 group-hover:translate-x-0.5">
+                      Полное описание →
+                    </span>
                   </div>
                   <div className="flex items-center justify-between gap-4 md:col-span-2 md:justify-end">
                     {photo ? (
