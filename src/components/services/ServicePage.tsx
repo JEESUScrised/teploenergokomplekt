@@ -223,7 +223,10 @@ export function ServicePage({ service }: Props) {
             Объекты
           </RevealHeading>
           <RevealText className="mb-8 max-w-2xl text-[var(--muted)]" delay={0.08}>
-            <p>Фотографии с объектов компании. Подписи содержат оборудование, город и год.</p>
+            <p>
+              Фотографии с объектов компании. Подписи с годом и местом публикуются после
+              подтверждения данных.
+            </p>
           </RevealText>
           <Reveal variant="up">
             <ProjectGallery projects={projectImages} />

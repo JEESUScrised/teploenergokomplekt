@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useSyncExternalStore } from "react";
-import type { Project } from "@/data/projects";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { ProjectLightbox } from "@/components/projects/ProjectLightbox";
+import type { GallerySlide } from "@/data/projects";
 
 type Props = {
-  projects: Project[];
+  projects: GallerySlide[];
 };
 
 function subscribeReducedMotion(onStoreChange: () => void) {
@@ -25,23 +26,12 @@ function getReducedMotionServerSnapshot() {
 export function ProjectGallery({ projects }: Props) {
   const [active, setActive] = useState<number | null>(null);
   const [paused, setPaused] = useState(false);
+  const lastTrigger = useRef<HTMLButtonElement | null>(null);
   const reduceMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot,
   );
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (active === null) return;
-      if (e.key === "Escape") setActive(null);
-      if (e.key === "ArrowRight") setActive((i) => (i === null ? i : (i + 1) % projects.length));
-      if (e.key === "ArrowLeft")
-        setActive((i) => (i === null ? i : (i - 1 + projects.length) % projects.length));
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [active, projects.length]);
 
   useEffect(() => {
     document.body.style.overflow = active !== null ? "hidden" : "";
@@ -50,7 +40,14 @@ export function ProjectGallery({ projects }: Props) {
     };
   }, [active]);
 
+  if (!projects.length) return null;
+
   const sequence = reduceMotion ? projects : [...projects, ...projects];
+  const lightboxImages = projects.map((p) => ({
+    src: p.src,
+    alt: p.alt,
+    caption: p.caption,
+  }));
 
   return (
     <>
@@ -73,9 +70,12 @@ export function ProjectGallery({ projects }: Props) {
               <button
                 key={`${project.id}-${index}`}
                 type="button"
-                onClick={() => setActive(realIndex)}
+                onClick={(e) => {
+                  lastTrigger.current = e.currentTarget;
+                  setActive(realIndex);
+                }}
                 className="project-marquee-card group"
-                aria-label={`${project.equipment}${project.location ? `, ${project.location}` : ""}${project.year ? `, ${project.year}` : ""}`}
+                aria-label={project.caption}
               >
                 <div className="relative h-full w-full overflow-hidden">
                   <Image
@@ -84,6 +84,7 @@ export function ProjectGallery({ projects }: Props) {
                     fill
                     sizes="(max-width: 768px) 80vw, 360px"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                    loading="lazy"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/25" />
                 </div>
@@ -91,9 +92,13 @@ export function ProjectGallery({ projects }: Props) {
                   <p className="font-[family-name:var(--font-display)] text-base uppercase tracking-wide">
                     {project.equipment}
                   </p>
-                  <p className="text-sm text-[var(--muted)]">
-                    {[project.location, project.year].filter(Boolean).join(" · ")}
-                  </p>
+                  {(project.location || project.year) && project.year ? (
+                    <p className="text-sm text-[var(--muted)]">
+                      {[project.location, project.year].filter(Boolean).join(" · ")}
+                    </p>
+                  ) : project.location ? (
+                    <p className="text-sm text-[var(--muted)]">{project.location}</p>
+                  ) : null}
                 </div>
               </button>
             );
@@ -102,41 +107,13 @@ export function ProjectGallery({ projects }: Props) {
       </div>
 
       {active !== null ? (
-        <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Просмотр объекта"
-          onClick={() => setActive(null)}
-        >
-          <div
-            className="relative w-full max-w-5xl border border-[var(--line)] bg-[var(--surface)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative aspect-[16/10] bg-[var(--background)]">
-              <Image
-                src={projects[active].src}
-                alt={projects[active].alt}
-                fill
-                className="object-contain"
-                sizes="100vw"
-                priority
-              />
-            </div>
-            <div className="flex items-center justify-between gap-4 border-t border-[var(--line)] px-4 py-3">
-              <p className="font-[family-name:var(--font-display)] uppercase tracking-wide">
-                {projects[active].caption}
-              </p>
-              <button
-                type="button"
-                className="btn btn-secondary min-h-10 px-3"
-                onClick={() => setActive(null)}
-              >
-                Закрыть
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProjectLightbox
+          images={lightboxImages}
+          index={active}
+          onIndexChange={setActive}
+          onClose={() => setActive(null)}
+          returnFocusRef={lastTrigger}
+        />
       ) : null}
     </>
   );

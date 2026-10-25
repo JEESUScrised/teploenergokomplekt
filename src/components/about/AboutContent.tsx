@@ -7,7 +7,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { RevealHeading, RevealText } from "@/components/motion/RevealHeading";
 import { Button } from "@/components/ui/Button";
 import { company } from "@/config/company";
-import { projects } from "@/data/projects";
+import { projects, toGallerySlides } from "@/data/projects";
 import { services } from "@/data/services";
 
 const boilerTypes = [
@@ -169,7 +169,7 @@ export function AboutContent() {
             Фотографии объектов
           </RevealHeading>
           <Reveal variant="up">
-            <ProjectGallery projects={projects.slice(0, 8)} />
+            <ProjectGallery projects={toGallerySlides(projects).slice(0, 8)} />
           </Reveal>
         </div>
       </section>
