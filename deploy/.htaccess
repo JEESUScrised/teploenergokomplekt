@@ -1,0 +1,15 @@
+DirectoryIndex index.html index.php
+Options -Indexes
+
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# Keep PHP API working
+RewriteRule ^api/ - [L]
+
+# Map clean URLs to exported .html when trailingSlash is false (safety)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
