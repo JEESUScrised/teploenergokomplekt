@@ -699,17 +699,34 @@ textarea {
 }
 
 .marquee {
+  position: relative;
   overflow: hidden;
   border-block: 1px solid var(--line);
   background: var(--surface);
+}
+
+/* Hidden probe for measuring one service-cycle width. */
+.marquee-measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  width: max-content;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .marquee-track {
   display: flex;
   width: max-content;
   gap: 0;
-  animation: marquee 36s linear infinite;
+  animation: marquee var(--marquee-duration, 36s) linear infinite;
   will-change: transform;
+}
+
+.marquee-group {
+  display: flex;
+  flex: none;
 }
 
 .marquee-track.is-paused {
@@ -718,6 +735,8 @@ textarea {
 
 .marquee-track.is-static {
   animation: none;
+  transform: none;
+  will-change: auto;
 }
 
 .marquee-item {
@@ -731,12 +750,13 @@ textarea {
   white-space: nowrap;
 }
 
+/* Shift exactly one identical group (50% of two equal groups) — seamless loop. */
 @keyframes marquee {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
