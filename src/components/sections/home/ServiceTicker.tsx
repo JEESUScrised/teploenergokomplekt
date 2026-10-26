@@ -7,15 +7,16 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 /** Live catalog short titles — keeps ticker in sync with services. */
 const TICKER_LABELS = services.map((service) => service.shortTitle);
 
-/** Target visual speed (px / second), independent of viewport width. */
-const SPEED_PX_PER_SEC = 48;
+/** Constant visual speed (px / second). */
+const SPEED_PX_PER_SEC = 60;
 
-const MAX_CYCLES = 24;
+const MAX_REPEAT = 32;
 
 type LayoutState = {
-  cycles: number;
+  repeatCount: number;
   shiftPx: number;
   durationSec: number;
+  ready: boolean;
 };
 
 function ItemRow({
@@ -40,10 +41,13 @@ export function ServiceTicker() {
   const [paused, setPaused] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState<LayoutState>({
-    cycles: 2,
+    // Safe initial fill for wide screens before first measure.
+    repeatCount: 4,
     shiftPx: 0,
-    durationSec: 36,
+    durationSec: 40,
+    ready: false,
   });
 
   useLayoutEffect(() => {
@@ -59,25 +63,32 @@ export function ServiceTicker() {
     const recompute = () => {
       if (cancelled) return;
 
-      const viewWidth = viewport.clientWidth;
-      const unitWidth = measureEl.getBoundingClientRect().width;
-      if (viewWidth < 1 || unitWidth < 1) return;
+      const containerWidth = viewport.clientWidth;
+      const sequenceWidth = measureEl.getBoundingClientRect().width;
+      if (containerWidth < 1 || sequenceWidth < 1) return;
 
-      // Group width = cycles × unit ≥ viewport. Two such groups on the track →
-      // animating by exactly one group width (-shiftPx) is a seamless loop.
-      const cycles = Math.min(MAX_CYCLES, Math.max(1, Math.ceil(viewWidth / unitWidth)));
-      const shiftPx = unitWidth * cycles;
-      const durationSec = shiftPx / SPEED_PX_PER_SEC;
+      // Guaranteed overfill: ceil coverage + one extra full sequence.
+      const repeatCount = Math.min(
+        MAX_REPEAT,
+        Math.max(2, Math.ceil(containerWidth / sequenceWidth) + 1),
+      );
+      const estimatedShift = sequenceWidth * repeatCount;
+      const durationSec = estimatedShift / SPEED_PX_PER_SEC;
 
       setLayout((prev) => {
         if (
-          prev.cycles === cycles &&
-          Math.abs(prev.shiftPx - shiftPx) < 0.5 &&
-          Math.abs(prev.durationSec - durationSec) < 0.05
+          prev.ready &&
+          prev.repeatCount === repeatCount &&
+          Math.abs(prev.shiftPx - estimatedShift) < 0.5
         ) {
           return prev;
         }
-        return { cycles, shiftPx, durationSec };
+        return {
+          repeatCount,
+          shiftPx: estimatedShift,
+          durationSec,
+          ready: true,
+        };
       });
     };
 
@@ -109,13 +120,34 @@ export function ServiceTicker() {
     };
   }, [reduce]);
 
-  const groupLabels = Array.from({ length: layout.cycles }, () => TICKER_LABELS).flat();
+  // After repeatCount paints, lock shift to the real group width (subpixel-accurate).
+  useLayoutEffect(() => {
+    if (reduce || !layout.ready) return;
+    const group = groupRef.current;
+    if (!group) return;
+
+    const painted = group.getBoundingClientRect().width;
+    if (painted < 1) return;
+
+    setLayout((prev) => {
+      if (Math.abs(prev.shiftPx - painted) < 0.5) return prev;
+      return {
+        ...prev,
+        shiftPx: painted,
+        durationSec: painted / SPEED_PX_PER_SEC,
+      };
+    });
+  }, [reduce, layout.ready, layout.repeatCount]);
+
+  const groupLabels = Array.from({ length: layout.repeatCount }, () => TICKER_LABELS).flat();
 
   return (
     <div
       ref={viewportRef}
       className="marquee"
       aria-label="Основные услуги"
+      data-ticker-ready={layout.ready ? "1" : "0"}
+      data-ticker-repeat={String(layout.repeatCount)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -136,7 +168,7 @@ export function ServiceTicker() {
               layout.shiftPx > 0 ? `-${layout.shiftPx}px` : "-50%",
           }}
         >
-          <div className="marquee-group">
+          <div ref={groupRef} className="marquee-group">
             <ItemRow labels={groupLabels} keyPrefix="a" />
           </div>
           <div className="marquee-group" aria-hidden="true">
