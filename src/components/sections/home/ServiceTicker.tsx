@@ -4,18 +4,32 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { services } from "@/data/services";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-/** Labels from the live services catalog (short titles). */
+/** Live catalog short titles — keeps ticker in sync with services. */
 const TICKER_LABELS = services.map((service) => service.shortTitle);
 
-/** Constant visual speed: distance scrolled per second. */
+/** Target visual speed (px / second), independent of viewport width. */
 const SPEED_PX_PER_SEC = 48;
 
-function MarqueeItems({ labels, keyPrefix }: { labels: string[]; keyPrefix: string }) {
-  return labels.map((item, index) => (
+const MAX_CYCLES = 24;
+
+type LayoutState = {
+  cycles: number;
+  shiftPx: number;
+  durationSec: number;
+};
+
+function ItemRow({
+  labels,
+  keyPrefix,
+}: {
+  labels: readonly string[];
+  keyPrefix: string;
+}) {
+  return labels.map((label, index) => (
     <span key={`${keyPrefix}-${index}`} className="marquee-item">
-      {item}
-      <span className="mx-2 text-[var(--line)]" aria-hidden="true">
-        •
+      {label}
+      <span className="marquee-sep" aria-hidden="true">
+        ·
       </span>
     </span>
   ));
@@ -26,40 +40,76 @@ export function ServiceTicker() {
   const [paused, setPaused] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
-  /** How many full label cycles fit inside one animated group (≥ viewport width). */
-  const [cyclesPerGroup, setCyclesPerGroup] = useState(2);
-  const [durationSec, setDurationSec] = useState(36);
+  const [layout, setLayout] = useState<LayoutState>({
+    cycles: 2,
+    shiftPx: 0,
+    durationSec: 36,
+  });
 
   useLayoutEffect(() => {
     if (reduce) return;
 
-    const update = () => {
-      const viewport = viewportRef.current;
-      const measure = measureRef.current;
-      if (!viewport || !measure) return;
+    const viewport = viewportRef.current;
+    const measureEl = measureRef.current;
+    if (!viewport || !measureEl) return;
 
-      const unitWidth = measure.scrollWidth;
+    let cancelled = false;
+    let raf = 0;
+
+    const recompute = () => {
+      if (cancelled) return;
+
       const viewWidth = viewport.clientWidth;
-      if (unitWidth <= 0 || viewWidth <= 0) return;
+      const unitWidth = measureEl.getBoundingClientRect().width;
+      if (viewWidth < 1 || unitWidth < 1) return;
 
-      // One group must be at least as wide as the viewport so the strip never shows a gap.
-      const cycles = Math.max(1, Math.ceil((viewWidth + 1) / unitWidth));
-      setCyclesPerGroup(cycles);
-      setDurationSec((unitWidth * cycles) / SPEED_PX_PER_SEC);
+      // Group width = cycles × unit ≥ viewport. Two such groups on the track →
+      // animating by exactly one group width (-shiftPx) is a seamless loop.
+      const cycles = Math.min(MAX_CYCLES, Math.max(1, Math.ceil(viewWidth / unitWidth)));
+      const shiftPx = unitWidth * cycles;
+      const durationSec = shiftPx / SPEED_PX_PER_SEC;
+
+      setLayout((prev) => {
+        if (
+          prev.cycles === cycles &&
+          Math.abs(prev.shiftPx - shiftPx) < 0.5 &&
+          Math.abs(prev.durationSec - durationSec) < 0.05
+        ) {
+          return prev;
+        }
+        return { cycles, shiftPx, durationSec };
+      });
     };
 
-    update();
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        raf = requestAnimationFrame(recompute);
+      });
+    };
 
-    const ro = new ResizeObserver(update);
-    if (viewportRef.current) ro.observe(viewportRef.current);
-    window.addEventListener("resize", update);
+    const ro = new ResizeObserver(schedule);
+    ro.observe(viewport);
+    ro.observe(measureEl);
+
+    const onFonts = () => schedule();
+    void document.fonts?.ready.then(() => {
+      if (!cancelled) schedule();
+    });
+    document.fonts?.addEventListener?.("loadingdone", onFonts);
+    window.addEventListener("resize", schedule);
+    schedule();
+
     return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
       ro.disconnect();
-      window.removeEventListener("resize", update);
+      document.fonts?.removeEventListener?.("loadingdone", onFonts);
+      window.removeEventListener("resize", schedule);
     };
   }, [reduce]);
 
-  const groupLabels = Array.from({ length: cyclesPerGroup }, () => TICKER_LABELS).flat();
+  const groupLabels = Array.from({ length: layout.cycles }, () => TICKER_LABELS).flat();
 
   return (
     <div
@@ -69,25 +119,28 @@ export function ServiceTicker() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Off-screen probe: width of one catalog cycle (used to size groups). */}
       <div ref={measureRef} className="marquee-measure" aria-hidden="true">
-        <MarqueeItems labels={TICKER_LABELS} keyPrefix="measure" />
+        <ItemRow labels={TICKER_LABELS} keyPrefix="m" />
       </div>
 
       {reduce ? (
         <div className="marquee-track is-static">
-          <MarqueeItems labels={TICKER_LABELS} keyPrefix="static" />
+          <ItemRow labels={TICKER_LABELS} keyPrefix="static" />
         </div>
       ) : (
         <div
           className={`marquee-track ${paused ? "is-paused" : ""}`}
-          style={{ ["--marquee-duration" as string]: `${durationSec}s` }}
+          style={{
+            ["--marquee-duration" as string]: `${layout.durationSec}s`,
+            ["--marquee-shift" as string]:
+              layout.shiftPx > 0 ? `-${layout.shiftPx}px` : "-50%",
+          }}
         >
           <div className="marquee-group">
-            <MarqueeItems labels={groupLabels} keyPrefix="a" />
+            <ItemRow labels={groupLabels} keyPrefix="a" />
           </div>
           <div className="marquee-group" aria-hidden="true">
-            <MarqueeItems labels={groupLabels} keyPrefix="b" />
+            <ItemRow labels={groupLabels} keyPrefix="b" />
           </div>
         </div>
       )}
