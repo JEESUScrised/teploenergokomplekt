@@ -8,6 +8,11 @@
  *   (`source: "filename"`) and must stay unpublished until the client confirms.
  * - Client brief examples (ДЕ-16 Бузулук 2026, etc.) are format samples, not
  *   automatic approval — even when a matching file exists.
+ * - Public decorative galleries (services, about) may use only:
+ *     • approved projects, or
+ *     • `source: "unknown"` HQ/illustration photos without provisional geo metadata.
+ *   Filename-derived candidates stay out of public UI until approved.
+ * - Only approved slides may carry city, region, year, or case-style captions.
  */
 
 export type ProjectImage = {
@@ -557,21 +562,42 @@ export function getDesignPreviewProjectsGroupedByYear(): ProjectYearGroup[] {
     .map(([year, items]) => ({ year, projects: items }));
 }
 
+/**
+ * Photos allowed in public decorative galleries.
+ * Excludes filename-derived object candidates until client approval.
+ */
+export function getPublicIllustrationProjects(): Project[] {
+  return projects.filter(
+    (p) => p.approvedForPublication || p.source === "unknown",
+  );
+}
+
 /** Flatten project images for marquees (About / Service pages). */
 export function toGallerySlides(list: Project[]): GallerySlide[] {
   const slides: GallerySlide[] = [];
   for (const project of list) {
+    const published = project.approvedForPublication;
+    const equipmentLabel = published
+      ? project.equipmentModel
+      : project.source === "unknown"
+        ? project.equipmentModel
+        : "Котельное оборудование";
+
     project.images.forEach((image, index) => {
       slides.push({
         id: `${project.id}-${index}`,
         src: image.src,
-        alt: image.alt,
-        equipment: project.equipmentModel,
-        location: [project.city, project.region].filter(Boolean).join(", "),
-        year: project.approvedForPublication && project.year ? String(project.year) : "",
-        caption: project.approvedForPublication
-          ? formatProjectCaption(project)
-          : project.equipmentModel,
+        alt: published
+          ? image.alt
+          : project.source === "unknown"
+            ? image.alt
+            : "Фотография котельного оборудования",
+        equipment: equipmentLabel,
+        location: published
+          ? [project.city, project.region].filter(Boolean).join(", ")
+          : "",
+        year: published && project.year ? String(project.year) : "",
+        caption: published ? formatProjectCaption(project) : equipmentLabel,
         aspect: image.aspect,
       });
     });
@@ -580,12 +606,13 @@ export function toGallerySlides(list: Project[]): GallerySlide[] {
 }
 
 export function projectsForTags(tags?: string[]): GallerySlide[] {
+  const pool = getPublicIllustrationProjects();
   if (!tags?.length) {
-    return toGallerySlides(projects).slice(0, 8);
+    return toGallerySlides(pool).slice(0, 8);
   }
-  const matched = projects.filter((p) =>
+  const matched = pool.filter((p) =>
     tags.some((tag) => p.id.includes(tag) || p.images.some((img) => img.src.includes(tag))),
   );
-  const slides = toGallerySlides(matched.length >= 2 ? matched : projects);
+  const slides = toGallerySlides(matched.length >= 2 ? matched : pool);
   return slides.slice(0, 8);
 }

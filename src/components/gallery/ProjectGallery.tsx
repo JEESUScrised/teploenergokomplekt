@@ -92,12 +92,11 @@ export function ProjectGallery({ projects }: Props) {
                   <p className="font-[family-name:var(--font-display)] text-base uppercase tracking-wide">
                     {project.equipment}
                   </p>
-                  {(project.location || project.year) && project.year ? (
+                  {/* Location/year only when both were approved into the slide data. */}
+                  {project.location && project.year ? (
                     <p className="text-sm text-[var(--muted)]">
                       {[project.location, project.year].filter(Boolean).join(" · ")}
                     </p>
-                  ) : project.location ? (
-                    <p className="text-sm text-[var(--muted)]">{project.location}</p>
                   ) : null}
                 </div>
               </button>

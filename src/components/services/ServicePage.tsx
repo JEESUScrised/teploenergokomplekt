@@ -224,8 +224,8 @@ export function ServicePage({ service }: Props) {
           </RevealHeading>
           <RevealText className="mb-8 max-w-2xl text-[var(--muted)]" delay={0.08}>
             <p>
-              Фотографии с объектов компании. Подписи с годом и местом публикуются после
-              подтверждения данных.
+              Фотографии с объектов компании. Город, год и полные подписи появляются только
+              после подтверждения состава портфолио заказчиком.
             </p>
           </RevealText>
           <Reveal variant="up">

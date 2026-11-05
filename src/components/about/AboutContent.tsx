@@ -7,7 +7,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { RevealHeading, RevealText } from "@/components/motion/RevealHeading";
 import { Button } from "@/components/ui/Button";
 import { company } from "@/config/company";
-import { projects, toGallerySlides } from "@/data/projects";
+import { getPublicIllustrationProjects, toGallerySlides } from "@/data/projects";
 import { services } from "@/data/services";
 
 const boilerTypes = [
@@ -144,11 +144,11 @@ export function AboutContent() {
           {[
             {
               title: "Квалификация специалистов",
-              text: "Специалисты компании имеют действующую аттестацию НАКС по группе КО и необходимые допуски для работ на опасных производственных объектах.",
+              text: "Работы выполняют специалисты сварочного производства. Актуальные сведения об аттестации НАКС и допусках к работам на ОПО предоставляем по запросу; сканы документов готовятся к публикации.",
             },
             {
               title: "Технологии и контроль качества",
-              text: "Применяем аттестованные технологии сварки, выполняем неразрушающий контроль и гидравлические испытания. По итогам работ передаём исполнительную документацию и протоколы.",
+              text: "Применяем технологии сварки с контролем качества соединений, выполняем неразрушающий контроль и гидравлические испытания. По итогам работ передаём исполнительную документацию и протоколы.",
             },
           ].map((card, i) => (
             <Reveal key={card.title} delay={i * 0.08}>
@@ -169,7 +169,9 @@ export function AboutContent() {
             Фотографии объектов
           </RevealHeading>
           <Reveal variant="up">
-            <ProjectGallery projects={toGallerySlides(projects).slice(0, 8)} />
+            <ProjectGallery
+              projects={toGallerySlides(getPublicIllustrationProjects()).slice(0, 8)}
+            />
           </Reveal>
         </div>
       </section>
