@@ -67,7 +67,9 @@ export function DocumentsContent() {
           </RevealHeading>
           <div className="mt-6 max-w-3xl space-y-4 text-[1.08rem] text-[var(--muted)]">
             <RevealText delay={0.08}>
-              <p>{documentsPageCopy.lead}</p>
+              <p>
+                {showPublished ? documentsPageCopy.leadPublished : documentsPageCopy.lead}
+              </p>
             </RevealText>
             <RevealText delay={0.12}>
               <p>{documentsPageCopy.normative}</p>
