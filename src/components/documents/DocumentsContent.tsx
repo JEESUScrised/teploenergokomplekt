@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { RevealHeading, RevealText } from "@/components/motion/RevealHeading";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { NaksSection } from "@/components/documents/NaksSection";
 import {
   documentVerificationLinks,
   documentsPageCopy,
@@ -162,6 +163,8 @@ export function DocumentsContent() {
           )}
         </div>
       </section>
+
+      <NaksSection />
 
       <section className="section border-b border-[var(--line)] bg-[var(--surface)]">
         <div className="container grid gap-8 lg:grid-cols-12">
