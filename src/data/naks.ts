@@ -56,6 +56,11 @@ export type NaksEquipmentAttestation = {
   fileApprovalStatus: NaksFileApprovalStatus;
   file?: string;
   verificationNote: string;
+  /**
+   * Closed draft until ownership/use by ООО «Теплоэнергокомплект» is confirmed.
+   * Keep source data; do not render in the public section while false.
+   */
+  publicVisible: boolean;
 };
 
 export type NaksPersonnelCard = {
@@ -124,10 +129,10 @@ export const naksOrganization: NaksOrganizationAttestation = {
 };
 
 /**
- * Equipment card uses client-provided details.
- * Registry search found matching model/serial/certificate, but the applicant
- * organization in the registry did not match ООО «Теплоэнергокомплект».
- * Do not present ownership as verified.
+ * Equipment card kept as a closed draft.
+ * Registry match exists for model/serial/certificate, but applicant org in
+ * the NAKS equipment registry is НПО «АВАНГАРД», not ООО «Теплоэнергокомплект».
+ * Do not claim ownership or use until the client confirms.
  */
 export const naksEquipment: NaksEquipmentAttestation = {
   id: "naks-equipment-ultraarc-220s",
@@ -152,8 +157,9 @@ export const naksEquipment: NaksEquipmentAttestation = {
   registryUrl: "https://naks.ru/registry/reg/so/",
   claimsStatus: "registry_mismatch",
   fileApprovalStatus: "pending_review",
+  publicVisible: false,
   verificationNote:
-    "Модель, заводской номер и номер свидетельства совпали с записью реестра оборудования НАКС, однако организация-заявитель в реестре отличается от ООО «Теплоэнергокомплект». Принадлежность оборудования компании на сайте не подтверждается.",
+    "Черновик. Модель, заводской номер и номер свидетельства совпали с записью реестра оборудования НАКС, однако организация-заявитель в реестре — НПО «АВАНГАРД». Принадлежность / использование оборудования ООО «Теплоэнергокомплект» не подтверждены заказчиком.",
 };
 
 /**
@@ -211,7 +217,7 @@ export const naksSectionCopy = {
   eyebrow: "Система аттестации сварочного производства",
   heading: "НАКС: квалификация и допуски",
   lead:
-    "Сведения об аттестации организации, сварочном оборудовании и квалификации персонала. Ниже — данные, предоставленные заказчиком, с указанием статуса сверки по официальным реестрам НАКС.",
+    "Сведения об аттестации организации и квалификации персонала в системе НАКС. Статус сверки указан по официальным реестрам. Сведения об оборудовании публикуются только после подтверждения принадлежности компании.",
   orgHeading: "Аттестация организации",
   equipmentHeading: "Аттестованное сварочное оборудование",
   personnelHeading: "Квалификация персонала",

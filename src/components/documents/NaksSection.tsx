@@ -43,6 +43,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 export function NaksSection() {
   const org = naksOrganization;
   const equipment = naksEquipment;
+  const showEquipment = equipment.publicVisible;
 
   return (
     <>
@@ -66,7 +67,7 @@ export function NaksSection() {
             <p>{naksSectionCopy.lead}</p>
           </RevealText>
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          <div className={`mt-10 grid gap-4 ${showEquipment ? "lg:grid-cols-2" : ""}`}>
             <Reveal
               className="border border-[var(--line)] bg-[var(--background)] p-5 md:p-6"
               delay={0.06}
@@ -128,82 +129,84 @@ export function NaksSection() {
               </div>
             </Reveal>
 
-            <Reveal
-              className="border border-[var(--line)] bg-[var(--background)] p-5 md:p-6"
-              delay={0.1}
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <p className="font-[family-name:var(--font-display)] text-sm tracking-wide text-[var(--blue)]">
-                  02 · Оборудование
-                </p>
-                <ClaimsBadge status={equipment.claimsStatus} />
-              </div>
-              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl uppercase tracking-wide leading-snug text-balance">
-                {naksSectionCopy.equipmentHeading}
-              </h3>
-              <p className="mt-3 text-sm text-[var(--muted)]">{equipment.title}</p>
-              <dl className="mt-5">
-                <MetaRow label="Модель" value={equipment.model} />
-                <MetaRow label="Заводской №" value={equipment.serialNumber} />
-                <MetaRow label="Свидетельство" value={`№ ${equipment.certificateNumber}`} />
-                <MetaRow
-                  label="Срок действия"
-                  value={
-                    equipment.validFrom && equipment.validUntil
-                      ? `${equipment.validFrom} — ${equipment.validUntil}`
-                      : equipment.validUntil
-                        ? `до ${equipment.validUntil}`
-                        : "уточняется"
-                  }
-                />
-                <MetaRow label="Аттестационный центр" value={equipment.attestationCenter} />
-              </dl>
-              <div className="mt-5">
-                <p className="font-[family-name:var(--font-display)] text-xs uppercase tracking-wide text-[var(--muted)]">
-                  Группы технических устройств
-                </p>
-                <ul className="mt-3 flex flex-wrap gap-2" aria-label="Группы технических устройств">
-                  {equipment.technicalDeviceGroups.map((group) => (
-                    <li
-                      key={group}
-                      className="border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 font-[family-name:var(--font-display)] text-xs tracking-wide text-[var(--text)]"
-                    >
-                      {group}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <p className="mt-5 text-sm text-[var(--muted)]">{equipment.verificationNote}</p>
-              <div className="mt-5 flex flex-wrap gap-4">
-                <a
-                  href={equipment.registryUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="link-arrow"
-                >
-                  Реестр сварочного оборудования
-                </a>
-                {equipment.fileApprovalStatus === "approved" && equipment.file ? (
+            {showEquipment ? (
+              <Reveal
+                className="border border-[var(--line)] bg-[var(--background)] p-5 md:p-6"
+                delay={0.1}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <p className="font-[family-name:var(--font-display)] text-sm tracking-wide text-[var(--blue)]">
+                    02 · Оборудование
+                  </p>
+                  <ClaimsBadge status={equipment.claimsStatus} />
+                </div>
+                <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl uppercase tracking-wide leading-snug text-balance">
+                  {naksSectionCopy.equipmentHeading}
+                </h3>
+                <p className="mt-3 text-sm text-[var(--muted)]">{equipment.title}</p>
+                <dl className="mt-5">
+                  <MetaRow label="Модель" value={equipment.model} />
+                  <MetaRow label="Заводской №" value={equipment.serialNumber} />
+                  <MetaRow label="Свидетельство" value={`№ ${equipment.certificateNumber}`} />
+                  <MetaRow
+                    label="Срок действия"
+                    value={
+                      equipment.validFrom && equipment.validUntil
+                        ? `${equipment.validFrom} — ${equipment.validUntil}`
+                        : equipment.validUntil
+                          ? `до ${equipment.validUntil}`
+                          : "уточняется"
+                    }
+                  />
+                  <MetaRow label="Аттестационный центр" value={equipment.attestationCenter} />
+                </dl>
+                <div className="mt-5">
+                  <p className="font-[family-name:var(--font-display)] text-xs uppercase tracking-wide text-[var(--muted)]">
+                    Группы технических устройств
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-2" aria-label="Группы технических устройств">
+                    {equipment.technicalDeviceGroups.map((group) => (
+                      <li
+                        key={group}
+                        className="border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 font-[family-name:var(--font-display)] text-xs tracking-wide text-[var(--text)]"
+                      >
+                        {group}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="mt-5 text-sm text-[var(--muted)]">{equipment.verificationNote}</p>
+                <div className="mt-5 flex flex-wrap gap-4">
                   <a
-                    href={equipment.file}
+                    href={equipment.registryUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="link-arrow"
                   >
-                    Скачать документ
+                    Реестр сварочного оборудования
                   </a>
-                ) : (
-                  <span className="text-sm text-[var(--muted)]">{naksSectionCopy.noScanNote}</span>
-                )}
-              </div>
-            </Reveal>
+                  {equipment.fileApprovalStatus === "approved" && equipment.file ? (
+                    <a
+                      href={equipment.file}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="link-arrow"
+                    >
+                      Скачать документ
+                    </a>
+                  ) : (
+                    <span className="text-sm text-[var(--muted)]">{naksSectionCopy.noScanNote}</span>
+                  )}
+                </div>
+              </Reveal>
+            ) : null}
           </div>
 
           <div className="mt-4 border border-[var(--line)] bg-[var(--surface)] p-5 md:p-6">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="font-[family-name:var(--font-display)] text-sm tracking-wide text-[var(--blue)]">
-                  03 · Персонал
+                  02 · Персонал
                 </p>
                 <h3 className="mt-3 font-[family-name:var(--font-display)] text-xl uppercase tracking-wide">
                   {naksSectionCopy.personnelHeading}

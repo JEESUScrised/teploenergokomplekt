@@ -4,7 +4,9 @@ import Link from "next/link";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { RevealHeading, RevealText } from "@/components/motion/RevealHeading";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { IndustrialSafetySection } from "@/components/documents/IndustrialSafetySection";
 import { NaksSection } from "@/components/documents/NaksSection";
+import { SroSection } from "@/components/documents/SroSection";
 import {
   documentVerificationLinks,
   documentsPageCopy,
@@ -87,17 +89,17 @@ export function DocumentsContent() {
         </div>
       </section>
 
-      <section className="section border-b border-[var(--line)]" aria-labelledby="docs-list-heading">
-        <div className="container">
-          <RevealHeading
-            id="docs-list-heading"
-            className="font-[family-name:var(--font-display)] text-3xl uppercase tracking-wide"
-            mode="up"
-          >
-            Документы
-          </RevealHeading>
+      {showPublished ? (
+        <section className="section border-b border-[var(--line)]" aria-labelledby="docs-list-heading">
+          <div className="container">
+            <RevealHeading
+              id="docs-list-heading"
+              className="font-[family-name:var(--font-display)] text-3xl uppercase tracking-wide"
+              mode="up"
+            >
+              Документы
+            </RevealHeading>
 
-          {showPublished ? (
             <Stagger className="mt-8 grid gap-4 md:grid-cols-2" as="ul">
               {published.map((doc, index) => (
                 <StaggerItem key={doc.id} as="li">
@@ -146,25 +148,13 @@ export function DocumentsContent() {
                 </StaggerItem>
               ))}
             </Stagger>
-          ) : (
-            <Reveal className="mt-8 border border-[var(--line)] bg-[var(--surface)] p-6 md:p-8" delay={0.08}>
-              <p className="text-[1.05rem] text-[var(--muted)]">{documentsPageCopy.emptyState}</p>
-              <p className="mt-4 text-sm text-[var(--muted)]">
-                Свяжитесь через раздел{" "}
-                <Link
-                  href="/contacts"
-                  className="text-[var(--blue)] underline-offset-2 hover:underline"
-                >
-                  Контакты
-                </Link>
-                .
-              </p>
-            </Reveal>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      ) : null}
 
       <NaksSection />
+      <IndustrialSafetySection />
+      <SroSection />
 
       <section className="section border-b border-[var(--line)] bg-[var(--surface)]">
         <div className="container grid gap-8 lg:grid-cols-12">
@@ -173,21 +163,35 @@ export function DocumentsContent() {
               className="font-[family-name:var(--font-display)] text-3xl uppercase tracking-wide"
               mode="up"
             >
-              Проверка подлинности
+              Проверка документов в официальных реестрах
             </RevealHeading>
           </div>
           <div className="lg:col-span-8">
             <RevealText className="text-[var(--muted)]" delay={0.08}>
               <p>{documentsPageCopy.verificationLead}</p>
             </RevealText>
-            <Stagger className="mt-6 grid gap-4" as="ul" fast>
+            {!showPublished ? (
+              <Reveal className="mt-4 border border-[var(--line)] bg-[var(--background)] p-4 md:p-5" delay={0.1}>
+                <p className="text-sm text-[var(--muted)]">
+                  {documentsPageCopy.emptyState} Свяжитесь через раздел{" "}
+                  <Link
+                    href="/contacts"
+                    className="text-[var(--blue)] underline-offset-2 hover:underline"
+                  >
+                    Контакты
+                  </Link>
+                  .
+                </p>
+              </Reveal>
+            ) : null}
+            <Stagger className="mt-6 grid gap-4 sm:grid-cols-2" as="ul" fast>
               {documentVerificationLinks.map((link) => (
                 <StaggerItem key={link.id} as="li">
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="group block border border-[var(--line)] bg-[var(--background)] p-5 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--blue)]"
+                    className="group block h-full border border-[var(--line)] bg-[var(--background)] p-5 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--blue)]"
                   >
                     <p className="font-[family-name:var(--font-display)] text-lg uppercase tracking-wide text-[var(--blue)] transition-transform duration-300 group-hover:translate-x-0.5">
                       {link.label}
