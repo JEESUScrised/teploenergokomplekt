@@ -16,8 +16,8 @@ const photoBySlug: Record<string, { src: string; alt: string }> = {
     alt: "Сварочные работы на котле",
   },
   "obmurovka-i-teploizolyatsiya": {
-    src: "/assets/projects/hq-heatex-copper-tubes.jpg",
-    alt: "Обмуровка и поверхности нагрева",
+    src: "/assets/boilers/boiler-complete-platform.png",
+    alt: "Котёл с обмуровкой и обвязкой на площадке",
   },
   "puskonaladochnye-raboty": {
     src: "/assets/projects/hq-boiler-row-gas.jpg",
@@ -75,7 +75,7 @@ export function ServicesEditorial() {
                     </h3>
                   </div>
                   <div className="md:col-span-5">
-                    <p className="text-[var(--muted)]">{service.cardTeaser}</p>
+                    <p className="text-[var(--muted)]">{service.cardDescription}</p>
                     <span className="mt-2 inline-block text-sm text-[var(--blue)] transition-transform duration-300 group-hover:translate-x-0.5">
                       Полное описание →
                     </span>
