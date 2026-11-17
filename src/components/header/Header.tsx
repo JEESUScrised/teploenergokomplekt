@@ -11,7 +11,7 @@ import { easeOutExpo } from "@/lib/motion";
 import { Button } from "@/components/ui/Button";
 
 const nav = [
-  { label: "О компании", href: "/about" },
+  { label: "О компании", href: "/#about" },
   { label: "Услуги", href: "/services", hasDropdown: true },
   { label: "Лицензии и допуски", href: "/documents", fullLabel: "Лицензии и допуски" },
   { label: "Контакты", href: "/contacts" },
@@ -278,7 +278,7 @@ export function Header() {
           >
             <div className="container flex min-h-full flex-col py-5">
               {[
-                { href: "/about", label: "О компании" },
+                { href: "/#about", label: "О компании" },
                 null,
                 { href: "/documents", label: "Лицензии и допуски" },
                 { href: "/contacts", label: "Контакты" },

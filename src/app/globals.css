@@ -132,6 +132,180 @@ textarea {
   border-bottom: 1px solid var(--line);
 }
 
+/* Unified homepage first screen (About) — keeps Hero motion language */
+.about-hero {
+  position: relative;
+  overflow-x: clip;
+}
+
+.about-hero-inner {
+  padding-block: clamp(2rem, 5vw, 3.5rem) clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.about-hero-intro {
+  max-width: 46rem;
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.about-hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.about-hero-actions .btn {
+  min-height: 46px;
+}
+
+.about-hero-grid {
+  display: grid;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.about-hero-boiler {
+  position: relative;
+  min-height: clamp(280px, 72vw, 360px);
+}
+
+.about-hero-rule-v,
+.about-hero-rule-h {
+  display: none;
+}
+
+@keyframes about-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes about-clip-reveal {
+  from {
+    clip-path: inset(0 0 0 55%);
+    opacity: 0.85;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes about-clip-reveal-mobile {
+  from {
+    clip-path: inset(55% 0 0 0);
+    opacity: 0.85;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+.about-hero-anim {
+  opacity: 0;
+  animation: about-fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--about-delay, 0s);
+}
+
+.about-hero-anim-clip {
+  animation: about-clip-reveal-mobile 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  clip-path: inset(55% 0 0 0);
+  opacity: 0.85;
+}
+
+.about-hero-anim-rule-v {
+  transform-origin: top center;
+  transform: scaleY(0);
+  animation: hero-rule-y 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+}
+
+.about-hero-anim-rule-h {
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: hero-rule-x 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+}
+
+.about-hero--reduced .about-hero-anim,
+.about-hero--reduced .about-hero-anim-clip,
+.about-hero--reduced .about-hero-anim-rule-v,
+.about-hero--reduced .about-hero-anim-rule-h {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+@media (min-width: 640px) {
+  .about-hero-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-hero {
+    min-height: min(calc(100svh - var(--header-h)), 900px);
+    display: flex;
+    align-items: stretch;
+  }
+
+  .about-hero-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(1.5rem, 3vh, 2.75rem) clamp(2rem, 4vh, 3.5rem);
+  }
+
+  .about-hero-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr) minmax(0, 0.95fr);
+    gap: 1.15rem;
+  }
+
+  .about-hero-boiler {
+    min-height: clamp(340px, 42vh, 460px);
+  }
+
+  .about-hero-anim-clip {
+    animation-name: about-clip-reveal;
+    clip-path: inset(0 0 0 55%);
+  }
+
+  .about-hero-rule-v {
+    display: block;
+    position: absolute;
+    top: 10%;
+    bottom: 10%;
+    left: 0;
+    width: 1px;
+    background: var(--line);
+    z-index: 1;
+  }
+
+  .about-hero-rule-h {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 10%;
+    top: 42%;
+    height: 1px;
+    background: var(--line);
+    z-index: 1;
+  }
+}
+
+@media (min-width: 1440px) {
+  .about-hero-boiler {
+    min-height: clamp(400px, 46vh, 520px);
+  }
+}
+
 @keyframes hero-fade-up {
   from {
     opacity: 0;
@@ -1502,6 +1676,10 @@ button.editorial-row:hover {
   .hero-anim,
   .hero-anim-line,
   .hero-anim-clip,
+  .about-hero-anim,
+  .about-hero-anim-clip,
+  .about-hero-anim-rule-v,
+  .about-hero-anim-rule-h,
   .tech-rule,
   .tech-rule-v {
     animation: none !important;

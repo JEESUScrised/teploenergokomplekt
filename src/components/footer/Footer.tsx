@@ -32,7 +32,7 @@ export function Footer() {
           <p className="eyebrow mb-4">Навигация</p>
           <ul className="grid gap-2">
             {[
-              { href: "/about", label: "О компании" },
+              { href: "/#about", label: "О компании" },
               { href: "/services", label: "Услуги" },
               { href: "/documents", label: "Лицензии и допуски" },
               { href: "/contacts", label: "Контакты" },

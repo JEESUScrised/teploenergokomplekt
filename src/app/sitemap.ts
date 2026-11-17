@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const site = getSiteUrl();
   const now = new Date();
 
-  const staticRoutes = ["", "/about", "/services", "/documents", "/contacts"].map((path) => ({
+  const staticRoutes = ["", "/services", "/documents", "/contacts"].map((path) => ({
     url: `${site}${path || "/"}`,
     lastModified: now,
     changeFrequency: "monthly" as const,

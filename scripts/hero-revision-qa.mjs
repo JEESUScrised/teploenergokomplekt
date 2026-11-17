@@ -37,7 +37,6 @@ for (const vp of viewports) {
   await page.waitForTimeout(500);
 
   const hero = page.locator("section.hero");
-  const about = page.locator('section[aria-labelledby="about-heading"]');
   checks.heroPresent = (await hero.count()) > 0;
 
   const order = await page.evaluate(() => {
@@ -49,8 +48,9 @@ for (const vp of viewports) {
       id: s.id,
     }));
   });
+  // Legacy check: hero was removed; about is now the first screen.
   checks.aboutAfterHero =
-    order[0]?.class?.includes("hero") && order[1]?.aria === "about-heading";
+    order[0]?.id === "about" || order[0]?.aria === "about-heading";
 
   const overflowX = await page.evaluate(() => {
     const doc = document.documentElement;

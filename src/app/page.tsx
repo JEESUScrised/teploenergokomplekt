@@ -1,6 +1,6 @@
 import { AboutStrip } from "@/components/sections/home/AboutStrip";
 import { Advantages } from "@/components/sections/home/Advantages";
-import { HomeHero } from "@/components/sections/home/HomeHero";
+import { GeographyQualityBand } from "@/components/sections/home/GeographyQualityBand";
 import { LicensesBand } from "@/components/sections/home/LicensesBand";
 import { ProjectsSection } from "@/components/sections/home/ProjectsSection";
 import { ServiceTicker } from "@/components/sections/home/ServiceTicker";
@@ -11,17 +11,17 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Ремонт промышленных котлов",
   description:
-    "Ремонт паровых и водогрейных котлов, реконструкция котельных, пусконаладка, обмуровка и диагностика. Выезд по России.",
+    "ООО «Теплоэнергокомплект» — ремонт, строительство и обслуживание котельных, паровых и водогрейных котлов. Полный цикл работ по России — от Белгорода до Находки.",
   path: "/",
 });
 
 export default function HomePage() {
   return (
     <>
-      <HomeHero />
       <AboutStrip />
       <ServiceTicker />
       <ServicesEditorial />
+      <GeographyQualityBand />
       <ProjectsSection />
       <Advantages />
       <LicensesBand />

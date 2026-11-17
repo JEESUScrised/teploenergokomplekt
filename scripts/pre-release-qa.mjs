@@ -10,7 +10,6 @@ const OUT = path.resolve("qa-screenshots/pre-release");
 
 const routes = [
   "/",
-  "/about/",
   "/services/",
   "/services/diagnostika-i-obsledovanie/",
   "/services/remont-kotlov/",
@@ -104,9 +103,9 @@ const closed = await page.evaluate(() => {
 });
 results.mobileMenu = { opened, closed };
 
-// Lightbox on about (marquee gallery)
+// Lightbox on homepage projects gallery (if present)
 await page.setViewportSize({ width: 1440, height: 900 });
-await page.goto(`${BASE}/about/`, { waitUntil: "networkidle" });
+await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
 await page.waitForTimeout(400);
 const card = page.locator(".project-marquee-card").first();
 if ((await card.count()) > 0) {

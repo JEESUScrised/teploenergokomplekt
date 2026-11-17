@@ -10,7 +10,6 @@ const OUT = path.resolve("qa-screenshots/security-patch");
 
 const routes = [
   "/",
-  "/about/",
   "/services/",
   "/services/diagnostika-i-obsledovanie/",
   "/services/remont-kotlov/",

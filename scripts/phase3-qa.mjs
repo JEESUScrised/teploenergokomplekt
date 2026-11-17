@@ -16,7 +16,7 @@ const shots = [
   { name: "home-full-390", w: 390, h: 844, url: "/", full: true },
   { name: "service-repair-1440", w: 1440, h: 900, url: "/services/remont-kotlov", full: false },
   { name: "documents-1440", w: 1440, h: 900, url: "/documents", full: false },
-  { name: "about-1440", w: 1440, h: 900, url: "/about", full: false },
+  { name: "about-anchor-1440", w: 1440, h: 900, url: "/#about", full: false },
 ];
 
 const browser = await chromium.launch({ channel: "chrome", headless: true });
