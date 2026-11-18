@@ -36,8 +36,31 @@ export function useRevealGate<T extends HTMLElement = HTMLElement>(
       setShow(true);
     };
 
+    // Layout-box check (ignores paint clip-path). Above-the-fold headings
+    // with `.reveal-clip` otherwise stay at opacity 0 until the failsafe.
+    const layoutVisible = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 0;
+      return (
+        rect.width > 0 &&
+        rect.height > 0 &&
+        rect.top < vh * 0.95 &&
+        rect.bottom > 0
+      );
+    };
+
+    let raf = 0;
+    if (layoutVisible()) {
+      raf = window.requestAnimationFrame(() => {
+        raf = window.requestAnimationFrame(reveal);
+      });
+      return () => {
+        window.cancelAnimationFrame(raf);
+      };
+    }
+
     // Never leave content invisible if IO fails / HMR race
-    const failsafe = window.setTimeout(reveal, 2800);
+    const failsafe = window.setTimeout(reveal, 1200);
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -56,6 +79,7 @@ export function useRevealGate<T extends HTMLElement = HTMLElement>(
 
     return () => {
       window.clearTimeout(failsafe);
+      window.cancelAnimationFrame(raf);
       io.disconnect();
     };
   }, [once, threshold]);

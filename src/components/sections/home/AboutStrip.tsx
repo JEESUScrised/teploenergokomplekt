@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { RevealHeading, RevealText } from "@/components/motion/RevealHeading";
 import { Button } from "@/components/ui/Button";
 import { company } from "@/config/company";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -40,31 +39,30 @@ export function AboutStrip() {
         <div className="about-hero-intro">
           <p
             className="eyebrow mb-3 lg:mb-4 about-hero-anim"
-            style={{ ["--about-delay" as string]: "0.12s" }}
+            style={{ ["--about-delay" as string]: "0.04s" }}
           >
             ООО «ТЕПЛОЭНЕРГОКОМПЛЕКТ»
           </p>
-          <RevealHeading
+          <h1
             id="about-heading"
-            as="h1"
-            className="display text-[clamp(2.8rem,8vw,5.4rem)] text-balance"
-            mode="clip"
+            className="display text-[clamp(2.8rem,8vw,5.4rem)] text-balance about-hero-anim"
+            style={{ ["--about-delay" as string]: "0.08s" }}
           >
             О нас
-          </RevealHeading>
-          <RevealText
-            className="mt-4 max-w-2xl text-[1.05rem] text-[var(--muted)] lg:mt-5"
-            delay={0.1}
+          </h1>
+          <div
+            className="mt-4 max-w-2xl text-[1.05rem] text-[var(--muted)] lg:mt-5 about-hero-anim"
+            style={{ ["--about-delay" as string]: "0.14s" }}
           >
             <p>
               Ремонт, реконструкция и монтаж паровых и водогрейных котлов и вспомогательного
               оборудования. Полный цикл работ по России — от Белгорода до Находки.
             </p>
-          </RevealText>
+          </div>
           <div className="about-hero-actions">
             <div
               className="w-full sm:w-auto about-hero-anim"
-              style={{ ["--about-delay" as string]: "0.28s" }}
+              style={{ ["--about-delay" as string]: "0.2s" }}
             >
               <Button href="/contacts#request" className="w-full sm:w-auto">
                 Получить консультацию
@@ -72,7 +70,7 @@ export function AboutStrip() {
             </div>
             <div
               className="w-full sm:w-auto about-hero-anim"
-              style={{ ["--about-delay" as string]: "0.36s" }}
+              style={{ ["--about-delay" as string]: "0.26s" }}
             >
               <Button href="/services" variant="secondary" className="w-full sm:w-auto">
                 Наши услуги
