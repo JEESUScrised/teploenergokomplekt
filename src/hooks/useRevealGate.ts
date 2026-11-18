@@ -60,7 +60,7 @@ export function useRevealGate<T extends HTMLElement = HTMLElement>(
     }
 
     // Never leave content invisible if IO fails / HMR race
-    const failsafe = window.setTimeout(reveal, 1200);
+    const failsafe = window.setTimeout(reveal, 700);
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -71,7 +71,8 @@ export function useRevealGate<T extends HTMLElement = HTMLElement>(
       },
       {
         threshold,
-        rootMargin: "0px 0px -10% 0px",
+        // Expand root downward so headings animate as soon as they approach.
+        rootMargin: "0px 0px 18% 0px",
       },
     );
 

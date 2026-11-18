@@ -185,6 +185,21 @@ textarea {
   }
 }
 
+/* Immediate entrance for above-the-fold headings (no IntersectionObserver wait). */
+.heading-enter {
+  opacity: 0;
+  animation: about-fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--heading-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heading-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 @keyframes about-clip-reveal {
   from {
     clip-path: inset(0 0 0 55%);

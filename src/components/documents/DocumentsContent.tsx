@@ -58,32 +58,34 @@ export function DocumentsContent() {
               { label: documentsSection.navLabel },
             ]}
           />
-          <Reveal variant="fade">
-            <p className="eyebrow mb-4">Документы компании</p>
-          </Reveal>
-          <RevealHeading
-            as="h1"
-            className="display text-[clamp(2.8rem,7vw,5rem)]"
-            mode="clip"
+          <p
+            className="eyebrow mb-4 heading-enter"
+            style={{ ["--heading-delay" as string]: "0.04s" }}
+          >
+            Документы компании
+          </p>
+          <h1
+            className="display text-[clamp(2.8rem,7vw,5rem)] heading-enter"
+            style={{ ["--heading-delay" as string]: "0.08s" }}
           >
             Лицензии и допуски
-          </RevealHeading>
+          </h1>
           <div className="mt-6 max-w-3xl space-y-4 text-[1.08rem] text-[var(--muted)]">
-            <RevealText delay={0.08}>
+            <div className="heading-enter" style={{ ["--heading-delay" as string]: "0.14s" }}>
               <p>
                 {showPublished ? documentsPageCopy.leadPublished : documentsPageCopy.lead}
               </p>
-            </RevealText>
-            <RevealText delay={0.12}>
+            </div>
+            <div className="heading-enter" style={{ ["--heading-delay" as string]: "0.2s" }}>
               <p>{documentsPageCopy.normative}</p>
-            </RevealText>
-            <RevealText delay={0.16}>
+            </div>
+            <div className="heading-enter" style={{ ["--heading-delay" as string]: "0.26s" }}>
               <p>{documentsPageCopy.naks}</p>
-            </RevealText>
+            </div>
             {showPublished ? (
-              <RevealText delay={0.2}>
+              <div className="heading-enter" style={{ ["--heading-delay" as string]: "0.32s" }}>
                 <p>{documentsPageCopy.publishedClosing}</p>
-              </RevealText>
+              </div>
             ) : null}
           </div>
         </div>

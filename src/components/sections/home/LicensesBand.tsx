@@ -22,11 +22,11 @@ export function LicensesBand() {
           <div className="max-w-3xl">
             <RevealHeading
               className="display text-[clamp(2.4rem,5vw,4.2rem)] text-balance"
-              mode="lines"
+              mode="clip"
             >
-              {"Лицензии\nи допуски"}
+              Лицензии и допуски
             </RevealHeading>
-            <RevealText className="mt-5 text-white/80" delay={0.12}>
+            <RevealText className="mt-5 text-white/80" delay={0.06}>
               <p>
                 {published
                   ? documentsPageCopy.homeTeaserPublished
